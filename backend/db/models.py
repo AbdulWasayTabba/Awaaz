@@ -9,7 +9,7 @@ from sqlalchemy import (BigInteger, Boolean, CHAR, Date, DateTime, ForeignKey, I
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.orm import mapped_column
 
-from database import Base
+from db.session import Base
 
 
 class AgeBand(Base):

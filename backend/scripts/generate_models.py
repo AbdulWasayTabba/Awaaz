@@ -134,7 +134,7 @@ o.append("from sqlalchemy import (BigInteger, Boolean, CHAR, Date, DateTime, For
          "                        text, func)")
 o.append("from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID")
 o.append("from sqlalchemy.orm import mapped_column\n")
-o.append("from database import Base\n")
+o.append("from db.session import Base\n")
 
 fk_count = 0
 used_cls = {}
