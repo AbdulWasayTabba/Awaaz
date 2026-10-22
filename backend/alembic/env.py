@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
 
-from database import Base
-import models  # noqa: F401  (registers all 91 tables)
+from db.session import Base
+import db.models as models  # noqa: F401  (registers all 91 tables)
 
 config = context.config
 

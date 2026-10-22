@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from database import engine
+from db.session import engine
 
 query = """
 select table_schema, count(*)

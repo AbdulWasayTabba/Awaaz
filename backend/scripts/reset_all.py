@@ -1,6 +1,6 @@
 """DEV ONLY: wipes every Awaaz schema and Alembic's version table."""
 from sqlalchemy import text
-from database import engine
+from db.session import engine
 
 SCHEMAS = ["app", "scoring", "billing", "audit", "linkage", "reporting"]
 
