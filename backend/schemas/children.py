@@ -19,3 +19,4 @@ class Child_Out(BaseModel):
     name : str
     dob : date
     age_in_months : int
+    is_linked: bool = False
