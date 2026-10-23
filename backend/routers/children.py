@@ -1,11 +1,12 @@
 from datetime import date, datetime, timezone
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from core.deps import get_current_user
-from db.models import Child, Guardianship, User
+from core.deps import get_current_user, account_type_of
+from db.models import CareAssignment, Child, Guardianship, User
 from db.session import get_db
 from schemas.children import Child_Create, Child_Out
 
@@ -20,18 +21,21 @@ def age_in_months(dob: date) -> int:
     return months
 
 
-def to_child_out(child: Child) -> Child_Out:
+def to_child_out(child: Child, is_linked: bool = False) -> Child_Out:
     # translate database names (nickname, date_of_birth) to API names (name, dob)
     return Child_Out(
         id=child.id,
         name=child.nickname,
         dob=child.date_of_birth,
         age_in_months=age_in_months(child.date_of_birth),
+        is_linked=is_linked
     )
 
 
 @router.post("", response_model=Child_Out, status_code=201)
 def create_child(body: Child_Create,user: User = Depends(get_current_user),db: Session = Depends(get_db)):
+    if account_type_of(db, user) != "parent":
+        raise HTTPException(status_code=403, detail="Only parent accounts can add children")
     child = Child(
         nickname=body.name,
         date_of_birth=body.dob,
@@ -69,4 +73,12 @@ def list_my_children(
         .where(Guardianship.user_id == user.id, Guardianship.ended_at.is_(None))
         .order_by(Child.created_at)
     ).all()
-    return [to_child_out(c) for c in children]
+
+    # which of those children currently have a therapist?
+    linked_ids = set(db.scalars(
+        select(CareAssignment.child_id).where(
+            CareAssignment.child_id.in_([c.id for c in children]),
+            CareAssignment.ended_at.is_(None),
+        )
+    ))
+    return [to_child_out(c, c.id in linked_ids) for c in children]

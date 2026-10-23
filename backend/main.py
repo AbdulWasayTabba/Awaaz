@@ -1,10 +1,12 @@
 from fastapi import FastAPI
-from routers import auth, children
+from routers import auth, children, invites, therapist
 from routers import auth
 
 app = FastAPI(title="Awaaz")
 app.include_router(auth.router)
 app.include_router(children.router)
+app.include_router(invites.router)
+app.include_router(therapist.router)
 
 @app.get("/")
 def root():
