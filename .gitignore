@@ -1,17 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
 # Python
 __pycache__/
 *.pyc
 venv/
 .venv/
+.ipynb_checkpoints/
 
-# Secrets
-.env
+# Audio, corpus and generated data
+backend/scoring/data/
+*.wav
+*.mp3
+*.zip
 
 # Node / Expo
 node_modules/
 .expo/
+mobile/dist/
 
-# OS / editor
-.DS_Store
+# Editor, tools, OS
 .vscode/
-backend/scoring/data/
+.claude/
+.DS_Store
+Thumbs.db
